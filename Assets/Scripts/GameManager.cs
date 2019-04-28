@@ -229,6 +229,8 @@ public static class GameManager {
         PlayerSpeed = _startingSpeed;
         Score = 0;
 
+        CurrentWave = 1;
+
         RemainingEnemiesToSpawn = _startingNumberToSpawn;
         RemainingEnemies = _startingNumberToSpawn;
 

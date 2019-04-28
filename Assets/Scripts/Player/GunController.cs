@@ -10,6 +10,10 @@ public class GunController : MonoBehaviour
  
     [SerializeField] private Transform firePoint = null;
 
+    [SerializeField] private Light _gunFireLigt = null;
+    private WaitForSeconds _wait = new WaitForSeconds(0.03f);
+    private AudioSource _audioSource = null;
+
     private bool _firing;
     public bool Firing
     {
@@ -28,14 +32,23 @@ public class GunController : MonoBehaviour
     {
         ObjectPool.InitPool(bullet, 50);
         _bulletId = bullet.GetInstanceID();
+
+        _gunFireLigt.enabled = false;
+
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Fire() {
         GameObject go = ObjectPool.GetInstance(_bulletId, firePoint.position, firePoint.rotation);
 		go.GetComponent<BulletController>().speed = bulletSpeed;
+        StartCoroutine(FireLight());
+        _audioSource.Play();
     }
 
-    private void OnDestroy() {
-        ObjectPool.Release(bullet);
+    IEnumerator FireLight() {
+        _gunFireLigt.enabled = true;
+        yield return _wait;
+        _gunFireLigt.enabled = false;
     }
+
 }
