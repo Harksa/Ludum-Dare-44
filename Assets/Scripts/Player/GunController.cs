@@ -7,8 +7,7 @@ public class GunController : MonoBehaviour
     [SerializeField] private GameObject bullet = null;
     private int _bulletId;
     [SerializeField] private float bulletSpeed = 10;
-    [SerializeField] private float timeBetweenShots = 0.25f;
-
+ 
     [SerializeField] private Transform firePoint = null;
 
     private bool _firing;
@@ -18,7 +17,7 @@ public class GunController : MonoBehaviour
         set { 
             _firing = value;
             if(_firing) {
-                InvokeRepeating("Fire", 0, timeBetweenShots);
+                InvokeRepeating("Fire", 0, GameManager.PlayerFireRate);
             } else {
                 CancelInvoke();
             }

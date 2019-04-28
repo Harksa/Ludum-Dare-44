@@ -17,6 +17,7 @@ public static class GameManager {
     public delegate void HealthChange(int healthChange);
     public delegate void StateChange(STATE state);
     public delegate void DamageChange(float damages);
+    public delegate void FireRateChange(float fireRate);
     public delegate void WaveChange(float wave);
     public delegate void StartWave();
     public delegate void EnemyRemainingChange(int remainingEnemies);
@@ -51,7 +52,7 @@ public static class GameManager {
     #endregion
     
     #region GESTION VIE
-    public const int maxHealth = 100;
+    public const int _maxHealth = 100;
 
     public static event HealthChange MaxhHealthChanged;
 
@@ -65,14 +66,14 @@ public static class GameManager {
             if(MaxhHealthChanged != null)
                 MaxhHealthChanged(_currentMaxHealth);
 
-            if(Health > CurrentMaxHealth)
-                Health = CurrentMaxHealth;
+            if(PlayerHealth > CurrentMaxHealth)
+                PlayerHealth = CurrentMaxHealth;
         }
     }
 
     public static event HealthChange HealthChanged;
     private static int _health;
-    public static int Health {
+    public static int PlayerHealth {
         get { return _health; }
         set {
             if (value != _health) {
@@ -134,30 +135,31 @@ public static class GameManager {
     }
     #endregion
 
-    #region GESTION DOMMAGES
-    private static float StartingDamages = 10;
-    
-    public static event DamageChange DamageChanged;
-    private static float _damages = 10;
-    
-    public static float Damages
-    {
-        get { return _damages;}
-        set { 
-            _damages = value;
+    #region GESTION JOUEUR
+    private static float _startingDamages = 10;
+    public static float PlayerDamages;
 
-            if(DamageChanged != null) {
-                DamageChanged(value);
-            }
-        }
-    }   
+    public readonly static float PlayerIncreaseDamages = 3;
+
+    private static float _startingFireRate = 0.3f;
+    public static float PlayerFireRate;
+
+    public readonly static float PlayerIncreaseFireRate = 0.05f;
+    
+    private static float _startingSpeed = 5;
+    public static float PlayerSpeed;
+
+    public readonly static float PlayerIncreaseSpeed = 0.25f;
+
+    public readonly static int PlayerRegainLife = 5;
+
     #endregion 
 
     #region GESTION ENNEMIS
         public static float EnemyHealth = 50;
-        public static float StartingEnemySpeed = 3;
+        public static float _startingEnemySpeed = 3;
         public static float EnemySpeed = 3;
-        public const float EnemySpeedUpPerWave = 0.3f;
+        public const float _enemySpeedUpPerWave = 0.33f;
     #endregion
 
 
@@ -175,11 +177,11 @@ public static class GameManager {
             }
         }
 
-        private static int StartingNumberToSpawn = 5;
+        private static int _startingNumberToSpawn = 5;
         public static int RemainingEnemiesToSpawn = 5;
-        private static float _growingRate = 1.12f;
+        private static float _growingRate = 1.15f;
         public static float SpawningRate = 1;
-        private static float _spawningIncrasingRate = 0.04f;
+        private static float _spawningIncrasingRate = 0.08f;
 
         public static event EnemyRemainingChange EnemyRemainingChanged;
         private static  int _remainingEnemies;
@@ -203,11 +205,11 @@ public static class GameManager {
         public static void StartNextWave() {
             CurrentWave ++;
 
-            RemainingEnemiesToSpawn = (int) ((StartingNumberToSpawn + 5 * (CurrentWave - 1)) * _growingRate);
+            RemainingEnemiesToSpawn = (int) ((_startingNumberToSpawn + 5 * (CurrentWave - 1)) * _growingRate);
             RemainingEnemies = RemainingEnemiesToSpawn;
             SpawningRate -= _spawningIncrasingRate;
-            
-            EnemySpeed += EnemySpeedUpPerWave;
+            if(SpawningRate < 0) SpawningRate = 0;    
+            EnemySpeed += _enemySpeedUpPerWave;
 
             State = STATE.Running;
 
@@ -219,14 +221,16 @@ public static class GameManager {
     #endregion
 
     public static void Start() {
-        Health = maxHealth;
-        Damages = StartingDamages;
+        PlayerHealth = _maxHealth;
+        PlayerDamages = _startingDamages;
+        PlayerFireRate = _startingFireRate;
+        PlayerSpeed = _startingSpeed;
         Score = 0;
 
-        RemainingEnemiesToSpawn = StartingNumberToSpawn;
-        RemainingEnemies = StartingNumberToSpawn;
+        RemainingEnemiesToSpawn = _startingNumberToSpawn;
+        RemainingEnemies = _startingNumberToSpawn;
 
-        EnemySpeed = StartingEnemySpeed;
+        EnemySpeed = _startingEnemySpeed;
 
         State = STATE.Running;
 

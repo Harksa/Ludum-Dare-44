@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class InGameManager : MonoBehaviour
 {
-
     void Start()
     {
-        GameManager.CurrentMaxHealth = GameManager.maxHealth;
-        GameManager.Health = GameManager.maxHealth;
+        GameManager.CurrentMaxHealth = GameManager._maxHealth;
+        GameManager.PlayerHealth = GameManager._maxHealth;
         GameManager.Score = 0;
     }
 

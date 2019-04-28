@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rigidbody;    
     
-    [SerializeField] private float _speed = 5f;
     private Vector3 moveInput = new Vector3();
     private Vector3 moveVelocity;
 
@@ -36,7 +35,7 @@ public class PlayerController : MonoBehaviour
             moveInput.x = Input.GetAxisRaw("Horizontal");
             moveInput.z = Input.GetAxisRaw("Vertical");
 
-            moveVelocity = moveInput * _speed;
+            moveVelocity = moveInput * GameManager.PlayerSpeed;
 
             Ray raycast = _camera.ScreenPointToRay(Input.mousePosition);
 

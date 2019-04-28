@@ -31,7 +31,7 @@ public class GameGUI : MonoBehaviour
 
         GameManager.MaxhHealthChanged += delegate(int maxHealth) {
             _lifeBar.maxValue = maxHealth;
-            _lifeText.text = $"{GameManager.Health} / {maxHealth}";
+            _lifeText.text = $"{GameManager.PlayerHealth} / {maxHealth}";
         };
 
         GameManager.OnStartWave += delegate() {

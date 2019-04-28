@@ -18,7 +18,7 @@ public class DamagePlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
        if(other.gameObject.CompareTag("Player")) {
-           GameManager.Health -= damages;
+           GameManager.PlayerHealth -= damages;
            currentDamageTick = damageTicks;
        } 
     }
@@ -26,7 +26,7 @@ public class DamagePlayer : MonoBehaviour
     private void OnTriggerStay(Collider other) {
         if(currentDamageTick <= 0) {
             if(other.gameObject.CompareTag("Player")) {
-                GameManager.Health -= damages;
+                GameManager.PlayerHealth -= damages;
                 currentDamageTick = damageTicks;
             } 
         }
