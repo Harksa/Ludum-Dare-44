@@ -9,16 +9,12 @@ public class PlayerHealthManager : MonoBehaviour
     private Renderer _renderer;
     private Color storedColor;
 
-
     void Start()
     {
-        GameManager.CurrentMaxHealth = GameManager.maxHealth;
-        GameManager.Health = GameManager.maxHealth;
-
         _renderer = GetComponentInChildren<Renderer>();
         storedColor = _renderer.material.GetColor("_Color");
 
-        GameManager.HealthChanged += delegate(float damages) {
+        GameManager.HealthChanged += delegate(int damages) {
             StartCoroutine(ColorChange());
         };
     }

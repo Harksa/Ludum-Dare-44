@@ -4,18 +4,11 @@ using UnityEngine;
 
 public class EnemyHealthManager : MonoBehaviour
 {
-
-    [SerializeField] private float maxHealth = 50;
-    private float currentHealth;
-
-    void Start()
-    {
-        currentHealth = maxHealth;
-    }
-
+    public float currentHealth;
     public void ApplyDamage() {
         currentHealth -= GameManager.Damages;
         if(currentHealth <= 0) {
+            GameManager.Score += GameManager.BaseEnemyScore + GameManager.EnemyScoreGrow * (GameManager.CurrentWave - 1);
             GameManager.RemainingEnemies--;
             ObjectPool.Release(gameObject);
         }

@@ -32,25 +32,27 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveInput.x = Input.GetAxisRaw("Horizontal");
-        moveInput.z = Input.GetAxisRaw("Vertical");
+        if(GameManager.State == GameManager.STATE.Running) {
+            moveInput.x = Input.GetAxisRaw("Horizontal");
+            moveInput.z = Input.GetAxisRaw("Vertical");
 
-        moveVelocity = moveInput * _speed;
+            moveVelocity = moveInput * _speed;
 
-        Ray raycast = _camera.ScreenPointToRay(Input.mousePosition);
+            Ray raycast = _camera.ScreenPointToRay(Input.mousePosition);
 
-        if(ground.Raycast(raycast, out float rayLenght)) {
-            Vector3 pointToLook = raycast.GetPoint(rayLenght);
-            transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
+            if(ground.Raycast(raycast, out float rayLenght)) {
+                Vector3 pointToLook = raycast.GetPoint(rayLenght);
+                transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
 
-            Debug.DrawLine(raycast.origin, pointToLook, Color.blue);
+                Debug.DrawLine(raycast.origin, pointToLook, Color.blue);
+            }
+
+            if(Input.GetMouseButtonDown(0))
+                Firing = true;
+            
+            if(Input.GetMouseButtonUp(0))
+                Firing = false;
         }
-
-        if(Input.GetMouseButtonDown(0))
-            Firing = true;
-        
-        if(Input.GetMouseButtonUp(0))
-            Firing = false;
     }
 
     private void FixedUpdate() {

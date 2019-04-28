@@ -6,8 +6,6 @@ public class EnemyController : MonoBehaviour
 {
     private Rigidbody _rigidbody;
 
-    public float speed;
-
     private PlayerController playerController;
 
     // Start is called before the first frame update
@@ -24,6 +22,6 @@ public class EnemyController : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        _rigidbody.velocity = transform.forward * speed;
+        _rigidbody.velocity = transform.forward * GameManager.EnemySpeed;
     }
 }

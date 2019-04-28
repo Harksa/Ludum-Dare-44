@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class DamagePlayer : MonoBehaviour
 {
-
-    public float damages = 10;
+    public int damages = 10;
 
     [SerializeField] private float damageTicks = 0.75f;
 

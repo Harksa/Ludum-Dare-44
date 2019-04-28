@@ -14,7 +14,7 @@ public static class GameManager {
     
     #region FONCTIONS DELEGATES
     public delegate void ScoreChange(int score);
-    public delegate void HealthChange(float healthChange);
+    public delegate void HealthChange(int healthChange);
     public delegate void StateChange(STATE state);
     public delegate void DamageChange(float damages);
     public delegate void WaveChange(float wave);
@@ -51,19 +51,19 @@ public static class GameManager {
     #endregion
     
     #region GESTION VIE
-    public const float maxHealth = 100;
+    public const int maxHealth = 100;
 
     public static event HealthChange MaxhHealthChanged;
 
-    private static float _currentMaxHealth;
-    public static float CurrentMaxHealth
+    private static int _currentMaxHealth;
+    public static int CurrentMaxHealth
     {
         get { return _currentMaxHealth;}
         set { 
             _currentMaxHealth = value;
 
             if(MaxhHealthChanged != null)
-                MaxhHealthChanged(value);
+                MaxhHealthChanged(_currentMaxHealth);
 
             if(Health > CurrentMaxHealth)
                 Health = CurrentMaxHealth;
@@ -71,8 +71,8 @@ public static class GameManager {
     }
 
     public static event HealthChange HealthChanged;
-    private static float _health;
-    public static float Health {
+    private static int _health;
+    public static int Health {
         get { return _health; }
         set {
             if (value != _health) {
@@ -97,6 +97,9 @@ public static class GameManager {
     #endregion
 
     #region GESTION SCORE
+    public static int BaseEnemyScore = 10;
+    public static int EnemyScoreGrow = 5;
+
     public static event ScoreChange HighScoreChanged;
     public static int HighScore {
         get {
@@ -132,6 +135,8 @@ public static class GameManager {
     #endregion
 
     #region GESTION DOMMAGES
+    private static float StartingDamages = 10;
+    
     public static event DamageChange DamageChanged;
     private static float _damages = 10;
     
@@ -147,6 +152,14 @@ public static class GameManager {
         }
     }   
     #endregion 
+
+    #region GESTION ENNEMIS
+        public static float EnemyHealth = 50;
+        public static float StartingEnemySpeed = 3;
+        public static float EnemySpeed = 3;
+        public const float EnemySpeedUpPerWave = 0.3f;
+    #endregion
+
 
     #region GESTION VAGUES
         public static event WaveChange WaveChanged;
@@ -190,9 +203,11 @@ public static class GameManager {
         public static void StartNextWave() {
             CurrentWave ++;
 
-            RemainingEnemiesToSpawn = (int) ((StartingNumberToSpawn + 5 * CurrentWave) * _growingRate);
+            RemainingEnemiesToSpawn = (int) ((StartingNumberToSpawn + 5 * (CurrentWave - 1)) * _growingRate);
             RemainingEnemies = RemainingEnemiesToSpawn;
             SpawningRate -= _spawningIncrasingRate;
+            
+            EnemySpeed += EnemySpeedUpPerWave;
 
             State = STATE.Running;
 
@@ -205,11 +220,13 @@ public static class GameManager {
 
     public static void Start() {
         Health = maxHealth;
+        Damages = StartingDamages;
         Score = 0;
-        Damages = 10;
 
         RemainingEnemiesToSpawn = StartingNumberToSpawn;
         RemainingEnemies = StartingNumberToSpawn;
+
+        EnemySpeed = StartingEnemySpeed;
 
         State = STATE.Running;
 

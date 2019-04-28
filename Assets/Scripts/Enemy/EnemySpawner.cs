@@ -5,10 +5,10 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _enemyToSpawn;
+    [SerializeField] private GameObject _enemyToSpawn = null;
     private int _enemyId;
 
-    [SerializeField] private List<GameObject> _spawnPoints;
+    [SerializeField] private List<GameObject> _spawnPoints = null;
 
     void Start()
     {
@@ -33,7 +33,9 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy() {
         int randomPos = Random.Range(0, _spawnPoints.Count);
-        ObjectPool.GetInstance(_enemyId, _spawnPoints[randomPos].transform.position);
-        GameManager.RemainingEnemiesToSpawn --;
+        GameObject go = ObjectPool.GetInstance(_enemyId, _spawnPoints[randomPos].transform.position);
+        EnemyHealthManager health = go.GetComponent<EnemyHealthManager>();
+        health.currentHealth = GameManager.EnemyHealth;
+        GameManager.RemainingEnemiesToSpawn--;
     }
 }
