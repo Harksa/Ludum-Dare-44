@@ -19,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
             StartCoroutine(Wave());
         };
 
-        GameManager.Start();
+        StartCoroutine(Wave());
     }
 
     public 

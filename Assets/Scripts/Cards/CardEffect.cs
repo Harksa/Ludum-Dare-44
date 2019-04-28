@@ -17,7 +17,7 @@ public class CardEffect : MonoBehaviour
         CARD_EFFECT effect = (CARD_EFFECT) card;
  
         if(effect != CARD_EFFECT.REGAIN_HEALTH)
-            GameManager.PlayerHealth -= 10;
+            GameManager.PlayerHealth -= GameManager.HPLostForBonus;
 
         switch(effect) {
             case CARD_EFFECT.INCREASE_DAMAGES:

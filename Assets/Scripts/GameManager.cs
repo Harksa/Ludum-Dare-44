@@ -16,9 +16,7 @@ public static class GameManager {
     public delegate void ScoreChange(int score);
     public delegate void HealthChange(int healthChange);
     public delegate void StateChange(STATE state);
-    public delegate void DamageChange(float damages);
-    public delegate void FireRateChange(float fireRate);
-    public delegate void WaveChange(float wave);
+    public delegate void WaveChange(int wave);
     public delegate void StartWave();
     public delegate void EnemyRemainingChange(int remainingEnemies);
     #endregion
@@ -50,8 +48,47 @@ public static class GameManager {
         }
     }
     #endregion
-    
-    #region GESTION VIE
+ 
+    #region GESTION SCORE
+    public static int BaseEnemyScore = 10;
+    public static int EnemyScoreGrow = 5;
+
+    public static event ScoreChange HighScoreChanged;
+    public static int HighScore {
+        get {
+            return PlayerPrefs.GetInt("HighScore", 0);
+        }
+        set {
+            PlayerPrefs.SetInt("HighScore", value);
+
+            if (HighScoreChanged != null) {
+                HighScoreChanged(value);
+            }
+        }
+    }
+
+    public static event ScoreChange ScoreChanged;
+    private static int _score;
+    public static int Score {
+        get { return _score; }
+        set {
+            if (value != _score) {
+                _score = value;
+
+                if (ScoreChanged != null) {
+                    ScoreChanged(_score);
+                }
+                
+                if (_score > HighScore) {
+                    HighScore = _score;
+                }
+            }
+        }
+    }
+    #endregion
+
+    #region GESTION JOUEUR
+
     public const int _maxHealth = 100;
 
     public static event HealthChange MaxhHealthChanged;
@@ -95,47 +132,7 @@ public static class GameManager {
             }
         }
     }
-    #endregion
-
-    #region GESTION SCORE
-    public static int BaseEnemyScore = 10;
-    public static int EnemyScoreGrow = 5;
-
-    public static event ScoreChange HighScoreChanged;
-    public static int HighScore {
-        get {
-            return PlayerPrefs.GetInt("HighScore", 0);
-        }
-        set {
-            PlayerPrefs.SetInt("HighScore", value);
-
-            if (HighScoreChanged != null) {
-                HighScoreChanged(value);
-            }
-        }
-    }
-
-    public static event ScoreChange ScoreChanged;
-    private static int _score;
-    public static int Score {
-        get { return _score; }
-        set {
-            if (value != _score) {
-                _score = value;
-
-                if (ScoreChanged != null) {
-                    ScoreChanged(_score);
-                }
-                
-                if (_score > HighScore) {
-                    HighScore = _score;
-                }
-            }
-        }
-    }
-    #endregion
-
-    #region GESTION JOUEUR
+ 
     private static float _startingDamages = 10;
     public static float PlayerDamages;
 
@@ -144,20 +141,21 @@ public static class GameManager {
     private static float _startingFireRate = 0.3f;
     public static float PlayerFireRate;
 
-    public readonly static float PlayerIncreaseFireRate = 0.05f;
+    public readonly static float PlayerIncreaseFireRate = 0.04f;
     
     private static float _startingSpeed = 5;
     public static float PlayerSpeed;
 
-    public readonly static float PlayerIncreaseSpeed = 0.25f;
+    public readonly static float PlayerIncreaseSpeed = 0.2f;
 
     public readonly static int PlayerRegainLife = 5;
+    public readonly static int HPLostForBonus = 10;
 
     #endregion 
 
     #region GESTION ENNEMIS
         public static float EnemyHealth = 50;
-        public static float _startingEnemySpeed = 3;
+        public static float _startingEnemySpeed = 3.33f;
         public static float EnemySpeed = 3;
         public const float _enemySpeedUpPerWave = 0.33f;
     #endregion
@@ -220,7 +218,11 @@ public static class GameManager {
 
     #endregion
 
-    public static void Start() {
+    public static void StartGame() {
+
+        ObjectPool.ClearPool();
+
+        CurrentMaxHealth = _maxHealth;
         PlayerHealth = _maxHealth;
         PlayerDamages = _startingDamages;
         PlayerFireRate = _startingFireRate;
@@ -232,25 +234,20 @@ public static class GameManager {
 
         EnemySpeed = _startingEnemySpeed;
 
-        State = STATE.Running;
+        ScoreChanged = null;
+        HighScoreChanged = null;
+        HealthChanged = null;
+        StateChanged = null;
+        WaveChanged = null;
+        EnemyRemainingChanged = null;
+        OnStartWave = null;
 
+        State = STATE.Running;
+        
         if(OnStartWave != null) {
             OnStartWave();
         }
     }
 
-    public static void Exit() {
-        ScoreChanged = null;
-        HighScoreChanged = null;
-        HealthChanged = null;
-        StateChanged = null;
-    }
 
-    public static void Restart() {
-        Start();
-        
-        //TODO RESET ALL OBJECT INSTEAD OF RELOADING
-        SceneManager.LoadScene(0);
-
-    }
 }

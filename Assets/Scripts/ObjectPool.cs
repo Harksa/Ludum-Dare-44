@@ -68,10 +68,6 @@ public class ObjectPool : MonoBehaviour {
         int id = toPool.GetInstanceID();
         InitPool(toPool, poolSize);
         return pools[id].PoolObject(position, rotation);
-        
-        //return Instantiate(toPool, position, rotation);
-        //ObjectPool pool = FindObjectOfType<ObjectPool>();
-        //return pool.PoolObject(position, rotation);
     }
 
     public static void Release(GameObject obj) {
@@ -85,5 +81,14 @@ public class ObjectPool : MonoBehaviour {
         }
         
         obj.SetActive(false);
+    }
+
+    public static void ClearPool() {
+        foreach (var item in pools)
+        {
+            item.Value._objectList.Clear();
+        }
+        
+        pools.Clear();
     }
 }

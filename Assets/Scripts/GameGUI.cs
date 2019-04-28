@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -17,12 +18,19 @@ public class GameGUI : MonoBehaviour
 
     [Header("SHOP")]
     [SerializeField] private GameObject _shopCanvas = null;
+    [SerializeField] private TextMeshProUGUI _damageCardText = null;
+    [SerializeField] private TextMeshProUGUI _fireRateCardText = null;
+    [SerializeField] private TextMeshProUGUI _speedCardText = null;
+    [SerializeField] private TextMeshProUGUI _healthCardText = null;
 
+    [Header("GAMEOVER")]
+    [SerializeField] private GameObject _gameOverCanvas = null;
 
     // Start is called before the first frame update
     void Start()
     {
         _shopCanvas.SetActive(false);
+        _gameOverCanvas.SetActive(false);
 
         GameManager.HealthChanged += delegate(int health) {
             _lifeBar.value = health;
@@ -52,8 +60,17 @@ public class GameGUI : MonoBehaviour
 
         _highScoreText.text = $"HighScore : {PlayerPrefs.GetInt("HighScore", 0)}";
 
-        GameManager.StateChanged += OnStateChanged;
+        string baseBonusText = $"Loose {GameManager.HPLostForBonus} HP and get";
 
+        NumberFormatInfo nfi = new System.Globalization.NumberFormatInfo();
+        nfi.NumberDecimalSeparator = ".";
+
+        _damageCardText.text = $"{baseBonusText} {GameManager.PlayerIncreaseDamages} bonus damages";
+        _fireRateCardText.text = $"{baseBonusText} {GameManager.PlayerIncreaseFireRate.ToString(nfi)} bonus fire rate";
+        _speedCardText.text = $"{baseBonusText} {GameManager.PlayerIncreaseSpeed.ToString(nfi)} bonus speed";
+        _healthCardText.text = $"Regain {GameManager.PlayerRegainLife} HP";
+
+        GameManager.StateChanged += OnStateChanged;
     }
 
     public void LaunchNextWave() {
@@ -65,6 +82,10 @@ public class GameGUI : MonoBehaviour
             _shopCanvas.SetActive(true);
         } else {
             _shopCanvas.SetActive(false);
+        }
+
+        if(state == GameManager.STATE.Over) {
+            _gameOverCanvas.SetActive(true);
         }
     }
 

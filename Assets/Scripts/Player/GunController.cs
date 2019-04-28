@@ -24,7 +24,7 @@ public class GunController : MonoBehaviour
         }
     }
     
-    void Start()
+    void Awake()
     {
         ObjectPool.InitPool(bullet, 50);
         _bulletId = bullet.GetInstanceID();
@@ -33,5 +33,9 @@ public class GunController : MonoBehaviour
     private void Fire() {
         GameObject go = ObjectPool.GetInstance(_bulletId, firePoint.position, firePoint.rotation);
 		go.GetComponent<BulletController>().speed = bulletSpeed;
+    }
+
+    private void OnDestroy() {
+        ObjectPool.Release(bullet);
     }
 }
