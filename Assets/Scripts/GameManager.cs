@@ -116,19 +116,18 @@ public static class GameManager {
             if (value != _health) {
                 _health = value;
 
-                if (HealthChanged != null) {
-                    HealthChanged(value);
-                }
-
                 if (_health <= 0) {
+                    _health = 0;
                     State = STATE.Over;
-                    return;
                 }
 
                 if(_health > CurrentMaxHealth) {
                     _health = CurrentMaxHealth;
                 }
-                
+                                
+                if (HealthChanged != null) {
+                    HealthChanged(_health);
+                }
             }
         }
     }
@@ -136,30 +135,29 @@ public static class GameManager {
     private static float _startingDamages = 10;
     public static float PlayerDamages;
 
-    public readonly static float PlayerIncreaseDamages = 3;
+    public readonly static float PlayerIncreaseDamages = 4;
 
     private static float _startingFireRate = 0.3f;
     public static float PlayerFireRate;
 
-    public readonly static float PlayerIncreaseFireRate = 0.04f;
+    public readonly static float PlayerIncreaseFireRate = 0.03f;
     
     private static float _startingSpeed = 5;
     public static float PlayerSpeed;
 
     public readonly static float PlayerIncreaseSpeed = 0.2f;
 
-    public readonly static int PlayerRegainLife = 5;
+    public readonly static int PlayerRegainLife = 7;
     public readonly static int HPLostForBonus = 10;
 
     #endregion 
 
     #region GESTION ENNEMIS
         public static float EnemyHealth = 50;
-        public static float _startingEnemySpeed = 3.33f;
-        public static float EnemySpeed = 3;
-        public const float _enemySpeedUpPerWave = 0.33f;
+        public static float _startingEnemySpeed = 3.25f;
+        public static float EnemySpeed;
+        public const float _enemySpeedUpPerWave = 0.25f;
     #endregion
-
 
     #region GESTION VAGUES
         public static event WaveChange WaveChanged;
@@ -177,9 +175,9 @@ public static class GameManager {
 
         private static int _startingNumberToSpawn = 5;
         public static int RemainingEnemiesToSpawn = 5;
-        private static float _growingRate = 1.15f;
+        private static float _growingRate = 1.1f;
         public static float SpawningRate = 1;
-        private static float _spawningIncrasingRate = 0.08f;
+        private static float _spawningIncrasingRate = 0.07f;
 
         public static event EnemyRemainingChange EnemyRemainingChanged;
         private static  int _remainingEnemies;

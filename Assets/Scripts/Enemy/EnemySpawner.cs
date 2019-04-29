@@ -12,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        ObjectPool.InitPool(_enemyToSpawn, 50);
+        ObjectPool.InitPool(_enemyToSpawn, 30);
         _enemyId = _enemyToSpawn.GetInstanceID();
         
         GameManager.OnStartWave += delegate () {

@@ -10,6 +10,10 @@ public class ButtonsScripts : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void ResumeGame(){
+        GameManager.State = GameManager.STATE.Running;
+    }
+
     public void ReturnToMain() {
         SceneManager.LoadScene(0);
     }

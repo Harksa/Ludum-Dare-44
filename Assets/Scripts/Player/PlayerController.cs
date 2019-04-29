@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private Camera _camera;
     private Plane ground = new Plane(Vector3.up, Vector3.zero);
 
+    [SerializeField] private Texture2D _cursor = null;
 
     [SerializeField] private GunController _gun = null;
 
@@ -26,6 +27,8 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _camera = Camera.main;
+
+        Cursor.SetCursor(_cursor, new Vector2(_cursor.width / 2, _cursor.height / 2), CursorMode.Auto);
     }
 
     // Update is called once per frame
@@ -51,11 +54,22 @@ public class PlayerController : MonoBehaviour
             
             if(Input.GetMouseButtonUp(0))
                 Firing = false;
+
+            if(Input.GetKeyDown(KeyCode.Escape)) {
+                if(GameManager.State == GameManager.STATE.Running) {
+                    GameManager.State = GameManager.STATE.Paused;
+                } else if(GameManager.State == GameManager.STATE.Paused) {
+                    GameManager.State = GameManager.STATE.Running;
+                }
+            }
         }
     }
-
     private void FixedUpdate() {
         _rigidbody.velocity = moveVelocity;
+    }
+
+    private void OnDestroy() {
+        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 
 }

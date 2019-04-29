@@ -23,6 +23,9 @@ public class GameGUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _speedCardText = null;
     [SerializeField] private TextMeshProUGUI _healthCardText = null;
 
+    [Header("PAUSE")]
+    [SerializeField] private GameObject _pauseCanvas = null;
+
     [Header("GAMEOVER")]
     [SerializeField] private GameObject _gameOverCanvas = null;
 
@@ -31,6 +34,7 @@ public class GameGUI : MonoBehaviour
     {
         _shopCanvas.SetActive(false);
         _gameOverCanvas.SetActive(false);
+        _pauseCanvas.SetActive(false);
 
         GameManager.HealthChanged += delegate(int health) {
             _lifeBar.value = health;
@@ -70,11 +74,9 @@ public class GameGUI : MonoBehaviour
         _speedCardText.text = $"{baseBonusText} {GameManager.PlayerIncreaseSpeed.ToString(nfi)} bonus speed";
         _healthCardText.text = $"Regain {GameManager.PlayerRegainLife} HP";
 
-        GameManager.StateChanged += OnStateChanged;
-    }
+        _remainingText.text = $"Remains : {GameManager.RemainingEnemies}";
 
-    public void LaunchNextWave() {
-        GameManager.StartNextWave();
+        GameManager.StateChanged += OnStateChanged;
     }
 
     private void OnStateChanged(GameManager.STATE state) {
@@ -86,6 +88,12 @@ public class GameGUI : MonoBehaviour
 
         if(state == GameManager.STATE.Over) {
             _gameOverCanvas.SetActive(true);
+        }
+
+        if(state == GameManager.STATE.Paused) {
+            _pauseCanvas.SetActive(true);
+        } else {
+            _pauseCanvas.SetActive(false);
         }
     }
 

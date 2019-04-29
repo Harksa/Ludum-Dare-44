@@ -21,7 +21,7 @@ public class GunController : MonoBehaviour
         set { 
             _firing = value;
             if(_firing) {
-                InvokeRepeating("Fire", 0, GameManager.PlayerFireRate);
+                InvokeRepeating("Fire", GameManager.PlayerFireRate, GameManager.PlayerFireRate);
             } else {
                 CancelInvoke();
             }
